@@ -1,9 +1,16 @@
 class GithubIssueWorker
   include Sidekiq::Worker
 
-  def perform(issue)
-    return unless issue.length.positive?
+  def perform(payload)
+    parsed_payload = JSON.parse(payload)
+    return unless valid_payload?(parsed_payload)
 
-    Author.create(name: issue['title'], biography: issue['body'])
+    GithubIssuesAuthor.new.perform(parsed_payload['action'], parsed_payload['issue'])
+  end
+
+  private
+
+  def valid_payload?(parsed_payload)
+    %w[action issue].all? { |attribute| parsed_payload.key? attribute }
   end
 end

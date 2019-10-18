@@ -1,5 +1,5 @@
 class AuthorsController < ApplicationController
-  before_action :set_author, only: [:show, :update, :destroy]
+  before_action :set_author, only: %i[show update destroy]
 
   def index
     @authors = Author.all
@@ -22,13 +22,8 @@ class AuthorsController < ApplicationController
   end
 
   def issue_to_author
-    issue_data = github_issue_params
-    if issue_data.permitted?
-      GithubIssueWorker.perform_async(issue_data.as_json)
-      render status: 202, json: { body: 'Request Received' }.to_json
-    else
-      render status: 400, json: { body: 'This is not an issue' }.to_json
-    end
+    GithubIssueWorker.perform_async(github_payload)
+    render status: 202, json: { body: 'Request Received' }.to_json
   end
 
   def update
@@ -53,7 +48,7 @@ class AuthorsController < ApplicationController
     params.require(:author).permit(:name)
   end
 
-  def github_issue_params
-    params.require(:issue).permit(:title, :body)
+  def github_payload
+    params.require(:payload)
   end
 end
