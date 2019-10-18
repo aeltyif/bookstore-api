@@ -9,6 +9,7 @@ end
 
 gem 'puma', '~> 3.7'
 gem 'rails', '~> 5.1.3'
+gem 'sidekiq'
 gem 'sqlite3'
 
 group :development, :test do
