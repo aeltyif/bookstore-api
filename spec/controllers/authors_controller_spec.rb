@@ -69,33 +69,4 @@ RSpec.describe AuthorsController, type: :request do
     it do
     end
   end
-
-  describe 'GET /dashboard' do
-    before do
-      timeoff
-      get "#{api_version}dashboard", headers: auth_headers
-    end
-
-    it 'returns status success' do
-      expect(response).to have_http_status :success
-    end
-
-    it 'returns dashboard data' do
-      json = JSON.parse(response.body)
-      expect(json).not_to be_empty
-      expect(json.size).not_to eq(0)
-      # Check the keys being used by the mobile App
-      expect(json['employee']['name']).not_to              be_empty
-      expect(json['employee']['position_name']).not_to     be_empty
-      expect(json['employee']['hiring_date']).not_to       be_empty
-      expect(json['employee']['picture_url']).not_to       be_empty
-      expect(json['employee']['manager']['name']).not_to   be_empty
-      expect(json['employee']['company']['name']).not_to   be_empty
-      expect(json['balances'].first['available_t']).not_to be_empty
-      expect(json['balances'].first['end_t']).not_to       be_empty
-      expect(json['balances'].first['timeoff_name']).to    eq(timeoff.name)
-      expect(json['balances'].first['current_balance']).to eq(14)
-      expect(json['balances'].first['total_balance']).to   eq(14)
-    end
-  end
 end
