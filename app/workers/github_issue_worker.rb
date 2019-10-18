@@ -5,7 +5,8 @@ class GithubIssueWorker
     parsed_payload = JSON.parse(payload)
     return unless valid_payload?(parsed_payload)
 
-    GithubIssuesAuthor.new.perform(parsed_payload['action'], parsed_payload['issue'])
+    GithubIssuesAuthor.new(Author.ids)
+                      .perform(parsed_payload['action'], parsed_payload['issue'])
   end
 
   private

@@ -7,13 +7,8 @@ task :issues_to_authors => [ :environment ] do
     if results.class == Hash
       puts results['message']
     else
-      handler = GithubIssuesAuthor.new
-      existing_authors_id = Author.ids
-      results.each do |issue|
-        next if existing_authors_id.include?(issue['id'])
-
-        handler.perform('opened', issue)
-      end
+      handler = GithubIssuesAuthor.new(Author.ids)
+      results.each { |issue| handler.perform('opened', issue) }
     end
   rescue SocketError
     puts 'Please check the URL provided'
