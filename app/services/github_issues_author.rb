@@ -8,14 +8,14 @@ class GithubIssuesAuthor
   end
 
   def perform(action, issue)
-    return unless ALLOWED_ACTIONS.include?(action) && valid?(issue)
+    return unless ALLOWED_ACTIONS.include?(action) && valid_issue?(issue)
 
     send("issue_#{action}", issue)
   end
 
   private
 
-  def valid?(issue)
+  def valid_issue?(issue)
     %w[id title body].all? { |attribute| issue.key? attribute }
   end
 
@@ -23,16 +23,33 @@ class GithubIssuesAuthor
     return if existing_authors_ids.include?(issue['id'])
 
     ActiveRecord::Base.transaction do
-      author = Author.create!(id: issue['id'], name: issue['title'], biography: issue['body'])
-      author.books.create!(title: Faker::Book.title, price: Faker::Number.positive(from: 5, to: 30), publisher: author) if author.persisted?
+      Book.create!(title:     Faker::Book.title,
+                   price:     Faker::Number.decimal(l_digits: 2),
+                   author:    create_author(issue),
+                   publisher: create_publishing_house)
     end
   end
 
   def issue_edited(issue)
-    Author.find_by_id(issue['id']).try(:update_attributes, biography: issue['body'])
+    find_author_by_id(issue['id']).try(:update_attributes, biography: issue['body'])
   end
 
   def issue_deleted(issue)
-    Author.find_by_id(issue['id']).try(:destroy)
+    find_author_by_id(issue['id']).try(:destroy)
+  end
+
+  def find_author_by_id(id)
+    Author.find_by(id: id)
+  end
+
+  def create_author(issue)
+    Author.create!(id:        issue['id'],
+                   name:      issue['title'],
+                   biography: issue['body'])
+  end
+
+  def create_publishing_house
+    PublishingHouse.create!(name:     Faker::Name.name,
+                            discount: Faker::Number.positive(from: 15, to: 60))
   end
 end

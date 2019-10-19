@@ -23,7 +23,7 @@ class AuthorsController < ApplicationController
 
   def issue_to_author
     GithubIssueWorker.perform_async(github_payload)
-    render status: 202, json: { body: 'Request Received' }.to_json
+    render status: :accepted, json: { body: 'Request Received' }.to_json
   end
 
   def update
@@ -41,7 +41,7 @@ class AuthorsController < ApplicationController
   private
 
   def set_author
-    @author = Author.find(params[:id])
+    @author = Author.find_by(id: params[:id])
   end
 
   def author_params

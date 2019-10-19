@@ -2,7 +2,7 @@ class BooksController < ApplicationController
   before_action :set_book, only: %i[show update destroy]
 
   def index
-    @books = Book.limit(params[:limit])
+    @books = Book.limit(params[:limit]).includes(:author, :publisher)
     render json: @books, meta: { total: Book.count }
   end
 
@@ -35,7 +35,7 @@ class BooksController < ApplicationController
   private
 
   def set_book
-    @book = Book.find(params[:id])
+    @book = Book.find_by(id: params[:id])
   end
 
   def book_params
