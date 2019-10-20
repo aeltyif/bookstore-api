@@ -1,5 +1,5 @@
 RSpec.describe PublishingHouseSerializer, type: :serializer do
-  let(:publisher)     { FactoryBot.build(:publishing_house) }
+  let(:publisher)     { build(:publishing_house) }
   let(:serializer)    { PublishingHouseSerializer.new(publisher) }
   let(:serialization) { ActiveModelSerializers::Adapter.create(serializer) }
   subject             { JSON.parse(serialization.to_json)['data']['attributes'] }

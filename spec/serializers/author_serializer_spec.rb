@@ -1,5 +1,5 @@
 RSpec.describe AuthorSerializer, type: :serializer do
-  let(:author)        { FactoryBot.build(:author) }
+  let(:author)        { build(:author) }
   let(:serializer)    { AuthorSerializer.new(author) }
   let(:serialization) { ActiveModelSerializers::Adapter.create(serializer) }
   subject             { JSON.parse(serialization.to_json)['data']['attributes'] }

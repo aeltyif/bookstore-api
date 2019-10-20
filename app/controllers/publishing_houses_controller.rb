@@ -36,7 +36,7 @@ class PublishingHousesController < ApplicationController
   private
 
   def set_publishing_house
-    @publishing_house = PublishingHouse.find_by(id: params[:id])
+    @publishing_house = PublishingHouse.find(params[:id])
   end
 
   def publishing_house_params

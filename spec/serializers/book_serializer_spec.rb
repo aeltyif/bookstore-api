@@ -1,7 +1,7 @@
 RSpec.describe BookSerializer, type: :serializer do
   let(:author)        { create(:author) }
   let(:publisher)     { create(:publishing_house) }
-  let(:book)          { FactoryBot.build(:book, author: author, publisher: publisher) }
+  let(:book)          { build(:book, author: author, publisher: publisher) }
   let(:serializer)    { BookSerializer.new(book) }
   let(:serialization) { ActiveModelSerializers::Adapter.create(serializer) }
   subject             { JSON.parse(serialization.to_json)['data']['attributes'] }

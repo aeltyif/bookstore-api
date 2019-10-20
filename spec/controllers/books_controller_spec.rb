@@ -1,10 +1,12 @@
-RSpec.describe AuthorsController, type: :request do
-  let(:resource)          { create(:author) }
-  let(:valid_params)      { FactoryBot.attributes_for(:author) }
-  let(:invalid_params)    { FactoryBot.attributes_for(:author, :invalid) }
-  let(:resource_constant) { Author }
-  let(:resource_name)     { 'authors' }
-  let(:params)            { {} }
+RSpec.describe BooksController, type: :request do
+  let(:author)            { create(:author) }
+  let(:resource)          { create(:book, author: author, publisher: author) }
+  let(:valid_book)        { build(:book, author: author, publisher: author) }
+  let(:invalid_book)      { build(:book, :invalid, author: author, publisher: author) }
+  let(:resource_constant) { Book }
+  let(:resource_name)     { 'books' }
+  let(:valid_params)      { ActiveModelSerializers::SerializableResource.new(valid_book, polymorphic: [:publisher]).as_json }
+  let(:invalid_params)    { ActiveModelSerializers::SerializableResource.new(invalid_book, polymorphic: [:publisher]).as_json }
 
   describe '#index' do
     context 'Available resource to list' do
@@ -68,8 +70,7 @@ RSpec.describe AuthorsController, type: :request do
   describe '#create' do
     context 'With valid parameters' do
       before do
-        params[resource_name.singularize] = valid_params
-        post "/#{resource_name}", params: params
+        post "/#{resource_name}", params: valid_params
       end
       it 'returns status success' do
         expect(response).to have_http_status :success
@@ -81,15 +82,14 @@ RSpec.describe AuthorsController, type: :request do
     end
     context 'With invalid parameters' do
       before do
-        params[resource_name.singularize] = invalid_params
-        post "/#{resource_name}", params: params
+        post "/#{resource_name}", params: invalid_params
       end
       it 'returns status unprocessable entity' do
         expect(response).to have_http_status :unprocessable_entity
       end
       it 'returns error message' do
         error_message = JSON.parse(response.body)
-        expect(error_message).to eq('name'=>["can't be blank"])
+        expect(error_message).to eq('title'=>["can't be blank"])
       end
     end
   end
@@ -97,8 +97,7 @@ RSpec.describe AuthorsController, type: :request do
   describe '#update' do
     context 'With valid parameters' do
       before do
-        params[resource_name.singularize] = valid_params
-        put "/#{resource_name}/#{resource.id}", params: params
+        put "/#{resource_name}/#{resource.id}", params: valid_params
       end
       it 'returns status unprocessable entity' do
         expect(response).to have_http_status :success
@@ -113,15 +112,14 @@ RSpec.describe AuthorsController, type: :request do
     end
     context 'With invalid parameters' do
       before do
-        params[resource_name.singularize] = invalid_params
-        put "/#{resource_name}/#{resource.id}", params: params
+        put "/#{resource_name}/#{resource.id}", params: invalid_params
       end
       it 'returns status unprocessable entity' do
         expect(response).to have_http_status :unprocessable_entity
       end
       it 'returns error message' do
         error_message = JSON.parse(response.body)
-        expect(error_message).to eq('name'=>["can't be blank"])
+        expect(error_message).to eq('title'=>["can't be blank"])
       end
     end
   end
@@ -139,7 +137,7 @@ RSpec.describe AuthorsController, type: :request do
         expect(resource_constant.count).to eq(0)
       end
     end
-    context 'With invalid parameters', focus: true do
+    context 'With invalid parameters' do
       before do
         delete "/#{resource_name}/#{resource.id + 1}"
       end

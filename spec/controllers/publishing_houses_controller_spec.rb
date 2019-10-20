@@ -1,9 +1,9 @@
-RSpec.describe AuthorsController, type: :request do
-  let(:resource)          { create(:author) }
-  let(:valid_params)      { FactoryBot.attributes_for(:author) }
-  let(:invalid_params)    { FactoryBot.attributes_for(:author, :invalid) }
-  let(:resource_constant) { Author }
-  let(:resource_name)     { 'authors' }
+RSpec.describe PublishingHousesController, type: :request do
+  let(:resource)          { create(:publishing_house) }
+  let(:valid_params)      { FactoryBot.attributes_for(:publishing_house) }
+  let(:invalid_params)    { FactoryBot.attributes_for(:publishing_house, :invalid) }
+  let(:resource_constant) { PublishingHouse }
+  let(:resource_name)     { 'publishing_houses' }
   let(:params)            { {} }
 
   describe '#index' do

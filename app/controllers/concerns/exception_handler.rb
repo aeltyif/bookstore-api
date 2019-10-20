@@ -15,11 +15,13 @@ module ExceptionHandler
 
   private
 
+  def handle_general_exceptions(exception)
+    handle_exceptions(exception, 'Something went wrong', :internal_server_error)
+  end
+
   def handle_exceptions(exception, message, status)
     raise exception if Rails.env.development?
 
-    respond_to do |format|
-      format.json { render json: { errors: message }, status: status }
-    end
+    render json: { errors: message }, status: status
   end
 end
