@@ -94,13 +94,26 @@ RSpec.describe AuthorsController, type: :request do
     end
   end
 
+  describe '#issue_to_author' do
+    before do
+      params[:payload] = { action: 'opened', issue: [] }
+      post "/#{resource_name}/issue_to_author", params: params
+    end
+    it 'returns status success' do
+      expect(response).to have_http_status :accepted
+    end
+    it 'returns success message' do
+      expect(JSON.parse(response.body)).to eq({ body: 'Request received' }.as_json)
+    end
+  end
+
   describe '#update' do
     context 'With valid parameters' do
       before do
         params[resource_name.singularize] = valid_params
         put "/#{resource_name}/#{resource.id}", params: params
       end
-      it 'returns status unprocessable entity' do
+      it 'returns status success' do
         expect(response).to have_http_status :success
       end
       it 'returns error message' do
@@ -139,7 +152,7 @@ RSpec.describe AuthorsController, type: :request do
         expect(resource_constant.count).to eq(0)
       end
     end
-    context 'With invalid parameters', focus: true do
+    context 'With invalid parameters' do
       before do
         delete "/#{resource_name}/#{resource.id + 1}"
       end

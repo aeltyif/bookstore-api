@@ -23,7 +23,7 @@ class AuthorsController < ApplicationController
 
   def issue_to_author
     GithubIssueWorker.perform_async(github_payload)
-    render status: :accepted, json: { body: 'Request Received' }.to_json
+    render status: :accepted, json: { body: 'Request received' }.to_json
   end
 
   def update

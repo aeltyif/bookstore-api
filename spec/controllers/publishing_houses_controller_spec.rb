@@ -139,7 +139,7 @@ RSpec.describe PublishingHousesController, type: :request do
         expect(resource_constant.count).to eq(0)
       end
     end
-    context 'With invalid parameters', focus: true do
+    context 'With invalid parameters' do
       before do
         delete "/#{resource_name}/#{resource.id + 1}"
       end
