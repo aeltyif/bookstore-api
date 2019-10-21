@@ -17,4 +17,8 @@ RSpec.describe BookSerializer, type: :serializer do
   it 'has a price that matches' do
     expect(subject['price']).to eq(book.price)
   end
+
+  it 'has a discount that matches' do
+    expect(subject['discount'].to_f).to eq(book.discount)
+  end
 end

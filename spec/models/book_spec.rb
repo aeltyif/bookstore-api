@@ -18,4 +18,15 @@ RSpec.describe Book, type: :model do
       expect(subject.price.class).to eq(Float)
     end
   end
+
+  describe 'Book discount' do
+    it 'return the author discount' do
+      subject.publisher = author
+      subject.save
+      expect(subject.discount).to eq(author.discount)
+    end
+    it 'return the publishing house discount' do
+      expect(subject.discount).to eq(publisher.discount)
+    end
+  end
 end
