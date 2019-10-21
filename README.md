@@ -1,4 +1,4 @@
-# Net Promoter Scores Service
+# Bookstore
 
 This is a Rails API for a bookstore, it's a basic CRUD that has authors, books, publishers.
 
