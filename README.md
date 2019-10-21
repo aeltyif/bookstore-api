@@ -24,3 +24,4 @@ You will need the following things properly installed on your computer.
 * `redis-server` skip if you have redis running
 * `bundle exec sidekiq`
 * `rails s`
+* `bundle exec rake issues_to_authors` rake task that converts github issues into authors and books
