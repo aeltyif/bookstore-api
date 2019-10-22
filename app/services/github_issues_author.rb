@@ -16,7 +16,8 @@ class GithubIssuesAuthor
   private
 
   def valid_issue?(issue)
-    %w[id title body].all? { |attribute| issue.key? attribute }
+    %w[id title body].all? { |attribute| issue.key? attribute } &&
+      issue['pull_request'].nil?
   end
 
   def issue_opened(issue)
