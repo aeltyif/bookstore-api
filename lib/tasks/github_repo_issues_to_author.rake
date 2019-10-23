@@ -1,7 +1,7 @@
 require 'net/http'
 
 desc 'Generate Authors & Books from Github repository URL'
-task issues_to_authors: %i[environment] do
+task authors_to_github_issues: %i[environment] do
   client = Octokit::Client.new(login: 'username_here', password: 'password_here')
   begin
     client.authorizations
