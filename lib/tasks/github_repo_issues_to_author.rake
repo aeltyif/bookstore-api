@@ -2,16 +2,14 @@ require 'net/http'
 
 desc 'Generate Authors & Books from Github repository URL'
 task issues_to_authors: %i[environment] do
+  client = Octokit::Client.new(login: 'username_here', password: 'password_here')
   begin
-    results = JSON.parse(Net::HTTP.get(URI.parse('https://api.github.com/repos/aeltyif/bookstore-api/issues')))
-    if results.class == Hash
-      puts results['message']
-    else
-      handler = GithubIssuesAuthor.new(Author.ids)
-      results.each { |issue| handler.perform('opened', issue) }
-      puts 'Finished Successfully'
+    client.authorizations
+    Author.all.each do |author|
+      client.create_issue('aeltyif/bookstore-api', author.name, author.biography)
     end
-  rescue SocketError
-    puts 'Please check the URL provided'
+    puts 'Finished Successfully'
+  rescue Octokit::Unauthorized
+    puts 'Wrong authentication was provided please check the login and the password'
   end
 end
