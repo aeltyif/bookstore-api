@@ -4,6 +4,7 @@ RSpec.describe Author, type: :model do
   describe 'Associations' do
     it { should have_many(:books).dependent(:destroy) }
     it { should have_many(:published).dependent(:destroy) }
+    it { is_expected.to validate_uniqueness_of(:issue_id).allow_nil }
   end
 
   describe 'Validations' do

@@ -29,9 +29,8 @@ RSpec.describe GithubIssuesAuthor do
       it 'With previous record' do
         author
         book
-        GithubIssuesAuthor.new(Author.ids).perform('opened', { id: author.id, title: 'Hello', body: 'Bio' }.as_json)
-        expect(Author.count).to eq(1)
-        expect(Book.count).to   eq(1)
+        options = { id: author.issue_id, title: 'Hello', body: 'Bio' }.as_json
+        expect { handler.perform('opened', options) }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
@@ -39,14 +38,14 @@ RSpec.describe GithubIssuesAuthor do
       it 'Without previous record' do
         author
         book
-        handler.perform('edited', { id: author.id + 1, title: 'Hello', body: 'Bio' }.as_json)
+        handler.perform('edited', { id: author.issue_id + 1, title: 'Hello', body: 'Bio' }.as_json)
         expect(Author.all.pluck(:biography)).not_to eq([['Bio']])
       end
 
       it 'With previous record' do
         author
         book
-        handler.perform('edited', { id: author.id, title: 'Hello', body: 'Bio' }.as_json)
+        handler.perform('edited', { id: author.issue_id, title: 'Hello', body: 'Bio' }.as_json)
         expect(Author.all.pluck(:name, :biography)).to eq([[author.name, 'Bio']])
       end
     end
@@ -55,14 +54,14 @@ RSpec.describe GithubIssuesAuthor do
       it 'Without previous record' do
         author
         book
-        handler.perform('deleted', { id: author.id + 1, title: 'Hello', body: 'Bio' }.as_json)
+        handler.perform('deleted', { id: author.issue_id + 1, title: 'Hello', body: 'Bio' }.as_json)
         expect(Author.all.pluck(:biography)).not_to eq([['Bio']])
       end
 
       it 'With previous record' do
         author
         book
-        handler.perform('deleted', { id: author.id, title: 'Hello', body: 'Bio' }.as_json)
+        handler.perform('deleted', { id: author.issue_id, title: 'Hello', body: 'Bio' }.as_json)
         expect(Author.count).to eq(0)
         expect(Book.count).to   eq(0)
       end

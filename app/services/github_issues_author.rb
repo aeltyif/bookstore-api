@@ -1,11 +1,5 @@
 class GithubIssuesAuthor
-  attr_reader :existing_authors_ids
-
   ALLOWED_ACTIONS = %w[opened edited deleted].freeze
-
-  def initialize(author_ids = [])
-    @existing_authors_ids = author_ids
-  end
 
   def perform(action, issue)
     return unless ALLOWED_ACTIONS.include?(action) && valid_issue?(issue)
@@ -21,8 +15,6 @@ class GithubIssuesAuthor
   end
 
   def issue_opened(issue)
-    return if existing_authors_ids.include?(issue['id'])
-
     ActiveRecord::Base.transaction do
       Book.create!(title:     Faker::Book.title,
                    price:     Faker::Number.decimal(l_digits: 2),
@@ -32,19 +24,19 @@ class GithubIssuesAuthor
   end
 
   def issue_edited(issue)
-    find_author_by_id(issue['id']).try(:update_attributes, biography: issue['body'])
+    author_by_issue_id(issue['id']).try(:update_attributes, biography: issue['body'])
   end
 
   def issue_deleted(issue)
-    find_author_by_id(issue['id']).try(:destroy)
+    author_by_issue_id(issue['id']).try(:destroy)
   end
 
-  def find_author_by_id(id)
-    Author.find_by(id: id)
+  def author_by_issue_id(id)
+    Author.find_by(issue_id: id)
   end
 
   def create_author(issue)
-    Author.create!(id:        issue['id'],
+    Author.create!(issue_id:  issue['id'],
                    name:      issue['title'],
                    biography: issue['body'])
   end
