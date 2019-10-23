@@ -20,13 +20,15 @@ RSpec.describe Book, type: :model do
   end
 
   describe 'Book discount' do
-    it 'return the author discount' do
-      subject.publisher = author
-      subject.save
-      expect(subject.discount).to eq(author.discount)
-    end
-    it 'return the publishing house discount' do
-      expect(subject.discount).to eq(publisher.discount)
+    context 'Correct discount amount accordingly to the publisher object' do
+      it 'return the author discount' do
+        subject.publisher = author
+        subject.save
+        expect(subject.discount).to eq(author.discount)
+      end
+      it 'return the publishing house discount' do
+        expect(subject.discount).to eq(publisher.discount)
+      end
     end
   end
 end

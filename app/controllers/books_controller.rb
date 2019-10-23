@@ -41,6 +41,6 @@ class BooksController < ApplicationController
   def book_params
     parsed = ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:publisher])
     parsed[:publisher_type] = parsed[:publisher_type].singularize.capitalize
-    parsed
+    parsed.except(:discount)
   end
 end
