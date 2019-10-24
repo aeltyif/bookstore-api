@@ -1,13 +1,19 @@
 class GithubIssuesAuthor
   ALLOWED_ACTIONS = %w[opened edited deleted].freeze
 
-  def perform(action, issue)
-    return unless ALLOWED_ACTIONS.include?(action) && valid_issue?(issue)
+  def perform(payload)
+    return unless valid_payload?(payload) &&
+                  ALLOWED_ACTIONS.include?(payload['action']) &&
+                  valid_issue?(payload['issue'])
 
-    send("issue_#{action}", issue)
+    send("issue_#{payload['action']}", payload['issue'])
   end
 
   private
+
+  def valid_payload?(payload)
+    %w[action issue].all? { |attribute| payload.key? attribute }
+  end
 
   def valid_issue?(issue)
     %w[id title body].all? { |attribute| issue.key? attribute } &&

@@ -2,8 +2,8 @@ RSpec.describe Author, type: :model do
   subject { create(:author) }
 
   describe 'Associations' do
-    it { should have_many(:books).dependent(:destroy) }
-    it { should have_many(:published).dependent(:destroy) }
+    it { should have_many(:books).dependent(:delete_all) }
+    it { should have_many(:published).dependent(:delete_all) }
     it { is_expected.to validate_uniqueness_of(:issue_id).allow_nil }
   end
 

@@ -1,4 +1,6 @@
 class AuthorsController < ApplicationController
+  include RequestValidator
+
   before_action :set_author, only: %i[show update destroy]
 
   def index
@@ -22,8 +24,13 @@ class AuthorsController < ApplicationController
   end
 
   def issue_to_author
-    GithubIssueWorker.perform_async(github_payload)
-    render status: :accepted, json: { body: 'Request received' }.to_json
+    request.body.rewind
+    if RequestValidator.valid_signature?(request)
+      GithubIssueWorker.perform_async(params[:payload])
+      render status: :accepted, json: { body: 'Request received' }.to_json
+    else
+      render status: :bad_request, json: { body: 'Invalid request was provided' }.to_json
+    end
   end
 
   def update
@@ -46,9 +53,5 @@ class AuthorsController < ApplicationController
 
   def author_params
     params.require(:author).permit(:name)
-  end
-
-  def github_payload
-    params.require(:payload)
   end
 end

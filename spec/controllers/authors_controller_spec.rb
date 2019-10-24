@@ -96,6 +96,7 @@ RSpec.describe AuthorsController, type: :request do
 
   describe '#issue_to_author' do
     before do
+      allow(RequestValidator).to receive(:valid_signature?).and_return(true)
       params[:payload] = { action: 'opened', issue: [] }
       post "/#{resource_name}/issue_to_author", params: params
     end
