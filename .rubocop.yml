@@ -1,0 +1,36 @@
+require: rubocop-rails
+
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Metrics/LineLength:
+  Enabled: false
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/AlignParameters:
+  EnforcedStyle: with_first_parameter
+
+Layout/AlignArguments:
+  EnforcedStyle: with_first_argument
+
+# This is because mode describe blocks go over the limit
+Metrics/ModuleLength:
+  Exclude:
+    - "**/*_spec.rb"
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_spec.rb"
+
+AllCops:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - 'Gemfile'
+    - 'db/schema.rb'
+    - 'db/migrate/*.rb'
+    - 'config/**/*.rb'
+    - 'bin/*'
+

@@ -1,18 +1,15 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: [:show, :update, :destroy]
+  before_action :set_book, only: %i[show update destroy]
 
-  # GET /books
   def index
-    @books = Book.limit(params[:limit])
+    @books = Book.limit(params[:limit]).includes(:author, :publisher)
     render json: @books, meta: { total: Book.count }
   end
 
-  # GET /books/1
   def show
     render json: @book
   end
 
-  # POST /books
   def create
     @book = Book.new(book_params)
 
@@ -23,7 +20,6 @@ class BooksController < ApplicationController
     end
   end
 
-  # PATCH/PUT /books/1
   def update
     if @book.update(book_params)
       render json: @book
@@ -32,7 +28,6 @@ class BooksController < ApplicationController
     end
   end
 
-  # DELETE /books/1
   def destroy
     @book.destroy
   end
@@ -46,6 +41,6 @@ class BooksController < ApplicationController
   def book_params
     parsed = ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:publisher])
     parsed[:publisher_type] = parsed[:publisher_type].singularize.capitalize
-    parsed
+    parsed.except(:discount)
   end
 end
