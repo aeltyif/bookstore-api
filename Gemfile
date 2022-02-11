@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'octokit', '~> 4.0'
-gem 'puma', '~> 3.7'
+gem 'puma', '~> 4.3'
 gem 'rails', '~> 5.1.3'
 gem 'sidekiq'
 gem 'sqlite3'
